@@ -65,3 +65,13 @@ node tools/declare.js
 ```
 yarn start
 ```
+
+### 自定义 NFT 外观
+
+本例子中 [util.js](https://github.com/ArcBlock/arcblock-nft-starter/blob/master/api/libs/util.js#L119) 里面我做了一个简单的自定义，自定义了一个 NFT 徽章，外观的展示由 `display` 属性决定，display 属性本质上是对一个标准的 svg 格式内容做了如下处理得到
+
+1. gzip
+2. toBase64
+
+官方提供了 `@arcblock/nft-template` lib, 里面提供了 createTicketSvg 和
+createCertSvg 两套通用模板，在 [playground](https://playground.wallet.arcblockio.cn/full) 中领取对应类型 NFT 即可看到效果。
