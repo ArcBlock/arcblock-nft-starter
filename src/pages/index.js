@@ -1,8 +1,11 @@
 /* eslint-disable react/jsx-one-expression-per-line */
 import React, { useContext } from 'react';
+import useToggle from 'react-use/lib/useToggle';
 import styled from 'styled-components';
 
 import Typography from '@material-ui/core/Typography';
+import Button from '@arcblock/ux/lib/Button';
+import Auth from '@arcblock/did-react/lib/Auth';
 import { SessionContext, PlaygroundAction } from '@arcblock/did-playground';
 
 import Layout from '../components/layout';
@@ -10,8 +13,11 @@ import env from '../libs/env';
 
 // 临时 demo 的页面
 export default function MiniPage() {
-  const { session } = useContext(SessionContext);
+  const { api, session } = useContext(SessionContext);
+  const [isShowBuyCustomNFT, setShowBuyCustomNFT] = useToggle(false);
   const { token } = session;
+
+  const buyCustomNFTSuccess = () => {};
 
   return (
     <Layout title="Home">
@@ -70,13 +76,32 @@ export default function MiniPage() {
             </Typography>
           </Typography>
           <div className="section__content">
-            <PlaygroundAction
-              action="send_local_token"
+            <Button
               className="action"
-              buttonVariant="contained"
-              amount={10}
-              title="发送一张自定义的徽章"
-            />
+              color="primary"
+              size="large"
+              variant="contained"
+              onClick={() => setShowBuyCustomNFT()}>
+              获取一张自定义的徽章
+            </Button>
+            {isShowBuyCustomNFT && (
+              <Auth
+                responsive
+                action="exchange_assets"
+                checkFn={api.get}
+                onClose={() => setShowBuyCustomNFT()}
+                onSuccess={buyCustomNFTSuccess}
+                extraParams={{
+                  isCustom: true,
+                }}
+                messages={{
+                  title: '获取一个自定义的 NFT 徽章',
+                  scan: '扫描下面二维码获取自定义的 NFT 徽章',
+                  confirm: '请在钱包中确认',
+                  success: '发送成功',
+                }}
+              />
+            )}
           </div>
         </section>
         <section className="section">
