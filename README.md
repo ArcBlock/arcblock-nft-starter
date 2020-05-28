@@ -68,7 +68,7 @@ yarn start
 
 ### 自定义 NFT 外观
 
-本例子中 [util.js](https://github.com/ArcBlock/arcblock-nft-starter/blob/master/api/libs/util.js#L119) 里面我做了一个简单的自定义，自定义了一个 NFT 徽章，外观的展示由 `display` 属性决定，display 属性本质上是对一个标准的 svg 格式内容做了如下处理得到
+本例子中 [util.js](https://github.com/ArcBlock/arcblock-nft-starter/blob/master/api/libs/util.js#L119) 里面做了一个简单的自定义，自定义了一个 NFT 徽章，外观的展示由 `display` 属性决定，display 属性本质上是对一个标准的 svg 格式内容做了如下处理得到
 
 1. gzip
 2. toBase64
