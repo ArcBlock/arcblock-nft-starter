@@ -107,8 +107,10 @@ const router = express.Router();
 
 // Currency
 walletHandlers.attach(Object.assign({ app: router }, require('../routes/auth/receive_token')));
+walletHandlers.attach(Object.assign({ app: router }, require('../routes/auth/send_nft')));
 walletHandlers.attach(Object.assign({ app: router }, require('../routes/auth/send_token')));
 swapHandlers.attach(Object.assign({ app: router }, require('../routes/auth/swap_token')));
+swapHandlers.attach(Object.assign({ app: router }, require('../routes/auth/swap_nft')));
 walletHandlers.attach(Object.assign({ app: router }, require('../routes/auth/login')));
 
 require('../routes/session').init(router);

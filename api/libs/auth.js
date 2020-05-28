@@ -2,17 +2,10 @@
 const Mcrypto = require('@arcblock/mcrypto');
 const ForgeSDK = require('@arcblock/forge-sdk');
 const TokenMongoStorage = require('@arcblock/did-auth-storage-mongo');
-const AgentMongoStorage = require('@arcblock/did-agent-storage-mongo');
 const SwapMongoStorage = require('@arcblock/swap-storage-mongo');
-const { AssetFactory } = require('@arcblock/asset-factory');
+const { NFTFactory } = require('@arcblock/nft');
 const { fromSecretKey, fromJSON, WalletType } = require('@arcblock/forge-wallet');
-const {
-  WalletAuthenticator,
-  AgentAuthenticator,
-  WalletHandlers,
-  SwapHandlers,
-  AgentWalletHandlers,
-} = require('@arcblock/did-auth');
+const { WalletAuthenticator, WalletHandlers, SwapHandlers } = require('@arcblock/did-auth');
 const env = require('./env');
 
 const type = WalletType({
@@ -31,7 +24,8 @@ if (env.chainHost) {
 }
 
 const wallet = fromSecretKey(process.env.APP_SK, type).toJSON();
-const isRestricted = process.env.APP_RESTRICTED_DECLARE && JSON.parse(process.env.APP_RESTRICTED_DECLARE);
+const isRestricted =
+  process.env.APP_RESTRICTED_DECLARE && JSON.parse(process.env.APP_RESTRICTED_DECLARE);
 const isNetlify = process.env.NETLIFY && JSON.parse(process.env.NETLIFY);
 
 let icon = 'https://releases.arcblockio.cn/playground.png';
@@ -64,25 +58,8 @@ const walletAuth = new WalletAuthenticator({
   },
 });
 
-const agentAuth = new AgentAuthenticator({
-  wallet,
-  baseUrl: env.baseUrl,
-  appInfo: {
-    name: 'Agent Service',
-    description: 'This is a demo agent service that can do did-auth on be-half-of another application',
-    icon: 'https://releases.arcblock.io/agent.png',
-    link: env.baseUrl,
-  },
-  chainInfo: {
-    host: env.chainHost,
-    id: env.chainId,
-    restrictedDeclare: isRestricted,
-  },
-});
-
 const tokenStorage = new TokenMongoStorage({ url: process.env.MONGO_URI });
 const swapStorage = new SwapMongoStorage({ url: process.env.MONGO_URI });
-const agentStorage = new AgentMongoStorage({ url: process.env.MONGO_URI });
 
 const walletHandlers = new WalletHandlers({
   authenticator: walletAuth,
@@ -104,13 +81,7 @@ const swapHandlers = new SwapHandlers({
   },
 });
 
-const agentHandlers = new AgentWalletHandlers({
-  authenticator: agentAuth,
-  tokenStorage,
-  agentStorage,
-});
-
-const localFactory = new AssetFactory({
+const localFactory = new NFTFactory({
   chainId: env.chainId,
   chainHost: env.chainHost,
   wallet: fromJSON(wallet),
@@ -121,7 +92,7 @@ const localFactory = new AssetFactory({
   },
 });
 
-const foreignFactory = new AssetFactory({
+const foreignFactory = new NFTFactory({
   chainId: env.assetChainId,
   chainHost: env.assetChainHost,
   wallet: fromJSON(wallet),
@@ -135,11 +106,9 @@ const foreignFactory = new AssetFactory({
 module.exports = {
   tokenStorage,
   swapStorage,
-  agentStorage,
 
   walletHandlers,
   swapHandlers,
-  agentHandlers,
 
   wallet,
   localFactory,

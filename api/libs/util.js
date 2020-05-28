@@ -1,6 +1,12 @@
 /* eslint-disable object-curly-newline */
 const ForgeSDK = require('@arcblock/forge-sdk');
-const { AssetRecipient, AssetIssuer } = require('@arcblock/asset-factory');
+const {
+  createZippedSvgDisplay,
+  createCertSvg,
+  createTicketSvg,
+} = require('@arcblock/nft-template');
+const { NFTRecipient, NFTIssuer } = require('@arcblock/nft');
+const { fromJSON } = require('@arcblock/forge-wallet');
 
 const env = require('./env');
 const { wallet } = require('./auth');
@@ -66,41 +72,7 @@ const getAccountStateOptions = { ignoreFields: [/\.withdrawItems/, /\.items/] };
 
 const ensureAsset = async (
   factory,
-  { userPk, userDid, type, name, description, backgroundUrl, logoUrl, startTime, endTime, location = 'China' }
-) => {
-  const methods = {
-    badge: factory.createBadge.bind(factory),
-    ticket: factory.createTicket.bind(factory),
-    certificate: factory.createCertificate.bind(factory),
-  };
-
-  const [asset, hash] = await methods[type]({
-    backgroundUrl,
-    data: {
-      name,
-      description,
-      reason: description,
-      logoUrl,
-      location,
-      issueTime: Date.now(),
-      startTime,
-      endTime,
-      expireTime: -1,
-      host: new AssetIssuer({
-        // Only for tickets?
-        wallet: ForgeSDK.Wallet.fromJSON(wallet),
-        name: wallet.address,
-      }),
-      recipient: new AssetRecipient({
-        wallet: ForgeSDK.Wallet.fromPublicKey(userPk),
-        name: userDid,
-        location: 'China, Beijing',
-      }),
-    },
-  });
-
-  // eslint-disable-next-line no-console
-  console.log('ensureAsset', {
+  {
     userPk,
     userDid,
     type,
@@ -108,11 +80,46 @@ const ensureAsset = async (
     description,
     backgroundUrl,
     logoUrl,
+    startTime,
+    endTime,
+    location = 'China',
+    vcType = '',
+  }
+) => {
+  const methods = {
+    badge: factory.createBadge.bind(factory),
+    ticket: factory.createTicket.bind(factory),
+    certificate: factory.createCertificate.bind(factory),
+  };
+  const data = {
+    name,
+    description,
+    reason: description,
+    logoUrl,
     location,
-    asset,
-    hash,
+    type: vcType,
+    issueTime: Date.now(),
+    startTime,
+    endTime,
+    expireTime: Date.now() + 365 * 3600,
+    host: new NFTIssuer({
+      wallet: fromJSON(wallet),
+      name: 'ArcBlock DevCon2020',
+    }),
+    recipient: new NFTRecipient({
+      wallet: ForgeSDK.Wallet.fromPublicKey(userPk),
+      name: userDid,
+      location: 'China, Beijing',
+    }),
+  };
+  const display = createZippedSvgDisplay(
+    type === 'ticket' ? createTicketSvg({ data }) : createCertSvg({ data })
+  );
+  const [asset] = await methods[type]({
+    display,
+    backgroundUrl,
+    data,
   });
-
   return asset;
 };
 

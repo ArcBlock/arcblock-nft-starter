@@ -26,7 +26,7 @@ export default function MiniPage() {
           <Typography component="h3" variant="h5" className="section__header" color="textPrimary" gutterBottom>
             Feeling lucky{' '}
             <Typography component="small" color="textSecondary">
-              Get your account funded for doing later testing
+              生成用于下面测试的两个账号
             </Typography>
           </Typography>
           <div className="section__content">
@@ -47,51 +47,51 @@ export default function MiniPage() {
         </section>
         <section className="section">
           <Typography component="h3" variant="h5" className="section__header" color="textPrimary" gutterBottom>
-            Atomic Swap Scenarios{' '}
+            Transfer NFT{' '}
             <Typography component="small" color="textSecondary">
-              Show the full potential of cross-chain transactions.
+              通过发送交易发送 NFT
             </Typography>
           </Typography>
           <div className="section__content">
             <PlaygroundAction
-              action="exchange_to_foreign_token"
-              title="Exchange Currency"
               className="action"
-              buttonVariant="contained"
-              buttonText={`Buy 1 ${token.foreign.symbol} with 195.8 ${token.local.symbol}`}
-              exchangeRate={195.8}
-            />
-            <PlaygroundAction
-              action="exchange_to_local_token"
-              title="Exchange Currency"
-              className="action"
-              buttonVariant="contained"
-              buttonText={`Sell 1 ${token.foreign.symbol} for 195.8 ${token.local.symbol}`}
-              exchangeRate={195.8}
+              title="获取一张门票"
+              action="buy_local_ticket_with_local_token"
+              payAmount={0}
+              receiveAmount={1}
             />
           </div>
         </section>
         <section className="section">
           <Typography component="h3" variant="h5" className="section__header" color="textPrimary" gutterBottom>
-            Transfer Scenarios{' '}
+            自定义 NFT{' '}
             <Typography component="small" color="textSecondary">
-              Help to generate different transfer transactions in ABT Wallet
+              自定义 NFT 样式
             </Typography>
           </Typography>
           <div className="section__content">
-            <PlaygroundAction
-              action="send_foreign_token"
-              className="action"
-              buttonVariant="contained"
-              amount={0.1}
-              title={`Send 0.1 ${token.foreign.symbol}`}
-            />
             <PlaygroundAction
               action="send_local_token"
               className="action"
               buttonVariant="contained"
               amount={10}
-              title={`Send 10 ${token.local.symbol}`}
+              title="发送一张自定义的徽章"
+            />
+          </div>
+        </section>
+        <section className="section">
+          <Typography component="h3" variant="h5" className="section__header" color="textPrimary" gutterBottom>
+            Atomic Swap NFT{' '}
+            <Typography component="small" color="textSecondary">
+              通过 Atomic Swap 的形式购买 NFT
+            </Typography>
+          </Typography>
+          <div className="section__content">
+            <PlaygroundAction
+              action="buy_local_ticket_with_foreign_token"
+              className="action"
+              price={1}
+              title="1 TBA 购买 1 张门票"
             />
           </div>
         </section>
