@@ -5,8 +5,8 @@
 1. NFT 的创建流程 (官方模板与自定义模板)
 2. NFT 的发送流程
 3. 基于 Atomic-Swap 的 NFT 创建，发送流程
-4. NFT 持有证明
-5. NFT VC 验证
+4. NFT 持有证明 (TBD)
+5. NFT VC 验证 (TBD)
 
 ### 如何使用
 
